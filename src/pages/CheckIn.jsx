@@ -161,18 +161,26 @@ export default function CheckIn() {
     <div className="min-h-screen bg-paper py-8 px-4 font-body">
       <div className="max-w-2xl mx-auto">
         <header className="mb-8 text-center">
-          <p className="font-mono text-[11px] tracking-[0.2em] text-brass uppercase mb-2">Check-in digital</p>
+          <p className="eyebrow mb-2">Check-in digital</p>
           <h1 className="font-display text-3xl md:text-4xl text-ink font-semibold">{reserva.nombre_titular}</h1>
-          <p className="text-ink/50 text-sm mt-2">
-            {reserva.habitacion && <>Habitación {reserva.habitacion} · </>}
-            {new Date(reserva.fecha_entrada).toLocaleDateString('es-EC', { day: 'numeric', month: 'short' })}
-            {' → '}
-            {new Date(reserva.fecha_salida).toLocaleDateString('es-EC', { day: 'numeric', month: 'short' })}
-            {' · '}{reserva.num_personas} {reserva.num_personas === 1 ? 'persona' : 'personas'}
-          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
+            {reserva.habitacion && (
+              <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-ink/10 text-ink/60">
+                Habitación {reserva.habitacion}
+              </span>
+            )}
+            <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-ink/10 text-ink/60">
+              {new Date(reserva.fecha_entrada).toLocaleDateString('es-EC', { day: 'numeric', month: 'short' })}
+              {' → '}
+              {new Date(reserva.fecha_salida).toLocaleDateString('es-EC', { day: 'numeric', month: 'short' })}
+            </span>
+            <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-ink/10 text-ink/60">
+              {reserva.num_personas} {reserva.num_personas === 1 ? 'persona' : 'personas'}
+            </span>
+          </div>
         </header>
 
-        <div className="bg-white rounded-2xl border border-ink/10 shadow-sm shadow-ink/5 overflow-hidden divide-y divide-ink/10">
+        <div className="card overflow-hidden divide-y divide-ink/10">
           {huespedes.map((h, i) => (
             <div key={i} className="p-6">
               <h2 className="font-display text-lg text-ink mb-4">
@@ -212,7 +220,7 @@ export default function CheckIn() {
         <button
           onClick={enviar}
           disabled={!puedeEnviar}
-          className="w-full mt-4 py-4 rounded-xl bg-ink text-paper font-semibold text-sm uppercase tracking-widest disabled:opacity-30 disabled:cursor-not-allowed hover:bg-ink/90 transition-colors"
+          className="btn-primary w-full mt-4 py-4 uppercase tracking-widest"
         >
           {enviando ? 'Guardando…' : 'Completar check-in'}
         </button>

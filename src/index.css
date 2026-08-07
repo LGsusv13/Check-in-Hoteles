@@ -28,3 +28,109 @@ body {
   body { background: white !important; }
   .print\:hidden { display: none !important; }
 }
+
+/* ---------------------------------------------------------------------
+   Sistema de componentes reutilizables — botones, tarjetas, badges.
+   Centralizado aquí para que toda la app se vea consistente.
+--------------------------------------------------------------------- */
+@layer components {
+  .btn, .btn-primary, .btn-accent, .btn-outline, .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all 150ms;
+    user-select: none;
+  }
+  .btn:disabled, .btn-primary:disabled, .btn-accent:disabled, .btn-outline:disabled, .btn-ghost:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .btn-primary {
+    background: #1B2430;
+    color: #F7F5F0;
+    box-shadow: 0 1px 2px rgba(27,36,48,0.1);
+  }
+  .btn-primary:hover:not(:disabled) { background: rgba(27,36,48,0.9); }
+  .btn-primary:active:not(:disabled) { transform: scale(0.98); }
+
+  .btn-accent {
+    background: #B8863B;
+    color: white;
+    box-shadow: 0 1px 2px rgba(184,134,59,0.2);
+  }
+  .btn-accent:hover:not(:disabled) { background: rgba(184,134,59,0.9); }
+  .btn-accent:active:not(:disabled) { transform: scale(0.98); }
+
+  .btn-outline {
+    background: white;
+    color: rgba(27,36,48,0.7);
+    border: 1px solid rgba(27,36,48,0.15);
+  }
+  .btn-outline:hover:not(:disabled) { background: rgba(27,36,48,0.05); }
+
+  .btn-ghost {
+    color: rgba(27,36,48,0.5);
+    background: transparent;
+  }
+  .btn-ghost:hover:not(:disabled) { color: #1B2430; background: rgba(27,36,48,0.05); }
+
+  .card {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid rgba(27,36,48,0.1);
+    box-shadow: 0 1px 2px rgba(27,36,48,0.03);
+  }
+
+  .badge, .badge-pendiente, .badge-checkin, .badge-checkout {
+    display: inline-flex;
+    align-items: center;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 0.25rem 0.625rem;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .badge-pendiente { background: rgba(27,36,48,0.08); color: rgba(27,36,48,0.55); }
+  .badge-checkin { background: rgba(62,92,80,0.1); color: #3E5C50; }
+  .badge-checkout { background: rgba(184,134,59,0.1); color: #B8863B; }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: #B8863B;
+    text-transform: uppercase;
+  }
+
+  .field-input {
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    border-radius: 0.5rem;
+    background: white;
+    border: 1px solid rgba(27,36,48,0.15);
+    color: #1B2430;
+    font-size: 0.875rem;
+    transition: border-color 150ms, box-shadow 150ms;
+  }
+  .field-input::placeholder { color: rgba(27,36,48,0.35); }
+  .field-input:focus {
+    outline: none;
+    border-color: #B8863B;
+    box-shadow: 0 0 0 2px rgba(184,134,59,0.5);
+  }
+  .field-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(27,36,48,0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.375rem;
+  }
+}

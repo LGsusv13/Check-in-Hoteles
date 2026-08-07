@@ -23,38 +23,42 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-ink flex items-center justify-center px-6 font-body">
-      <form onSubmit={entrar} className="w-full max-w-sm bg-paper rounded-2xl p-8 shadow-2xl">
-        <p className="font-mono text-[11px] tracking-[0.2em] text-brass uppercase mb-1">Panel administrativo</p>
+    <div className="min-h-screen bg-ink flex items-center justify-center px-6 font-body relative overflow-hidden">
+      <div
+        aria-hidden="true"
+        className="absolute -right-28 -bottom-28 w-[360px] h-[360px] rounded-full border-[20px] border-white/[0.04] pointer-events-none"
+      />
+      <form onSubmit={entrar} className="w-full max-w-sm bg-paper rounded-2xl p-8 shadow-2xl relative">
+        <div className="w-10 h-10 rounded-full border-2 border-brass/50 flex items-center justify-center mb-5">
+          <div className="w-4 h-4 rounded-full bg-brass" />
+        </div>
+
+        <p className="eyebrow mb-1">Panel administrativo</p>
         <h1 className="font-display text-2xl text-ink font-semibold mb-6">Iniciar sesión</h1>
 
-        <label className="block text-[11px] font-semibold text-ink/60 uppercase tracking-wider mb-1.5">Correo</label>
+        <label className="field-label">Correo</label>
         <input
           type="email"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-ink/15 text-sm mb-4 focus:outline-none focus:ring-2 focus:ring-brass/50"
+          className="field-input mb-4"
           placeholder="admin@tuhotel.com"
         />
 
-        <label className="block text-[11px] font-semibold text-ink/60 uppercase tracking-wider mb-1.5">Contraseña</label>
+        <label className="field-label">Contraseña</label>
         <input
           type="password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-3.5 py-2.5 rounded-lg bg-white border border-ink/15 text-sm mb-5 focus:outline-none focus:ring-2 focus:ring-brass/50"
+          className="field-input mb-5"
           placeholder="••••••••"
         />
 
         {error && <p className="text-rust text-sm mb-4">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={cargando}
-          className="w-full py-3 rounded-xl bg-ink text-paper font-semibold text-sm uppercase tracking-widest disabled:opacity-40 hover:bg-ink/90 transition-colors"
-        >
+        <button type="submit" disabled={cargando} className="btn-primary w-full">
           {cargando ? 'Entrando…' : 'Entrar'}
         </button>
 

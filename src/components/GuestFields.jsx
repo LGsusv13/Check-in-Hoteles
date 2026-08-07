@@ -7,12 +7,8 @@ import {
   MENSAJES_ERROR,
 } from '../lib/validators.js'
 
-const INPUT =
-  'w-full px-3.5 py-2.5 rounded-lg bg-white border border-ink/15 text-ink text-sm ' +
-  'placeholder:text-ink/35 focus:outline-none focus:ring-2 focus:ring-brass/50 focus:border-brass ' +
-  'transition-colors'
-
-const LABEL = 'block text-[11px] font-semibold text-ink/60 uppercase tracking-wider mb-1.5'
+const INPUT = 'field-input'
+const LABEL = 'field-label'
 
 function Campo({ label, error, children, required }) {
   return (
