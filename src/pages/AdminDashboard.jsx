@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { supabase } from '../lib/supabaseClient.js'
+import EnlaceAutoCheckin from '../components/EnlaceAutoCheckin.jsx'
 
 const BADGE = {
   pendiente: 'badge-pendiente',
@@ -82,6 +83,8 @@ export default function AdminDashboard() {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8">
+        <EnlaceAutoCheckin />
+
         <div className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between mb-6">
           <div className="flex gap-2 flex-wrap">
             {FILTROS.map((f) => (
@@ -106,8 +109,8 @@ export default function AdminDashboard() {
             <button onClick={exportarCSV} className="btn-outline text-xs px-3.5 py-2.5 shrink-0">
               CSV
             </button>
-            <Link to="/admin/reservas/nueva" className="btn-primary text-xs px-3.5 py-2.5 shrink-0">
-              + Nueva
+            <Link to="/admin/reservas/nueva" className="btn-outline text-xs px-3.5 py-2.5 shrink-0">
+              + Reserva anticipada
             </Link>
           </div>
         </div>
@@ -119,13 +122,10 @@ export default function AdminDashboard() {
         {!cargando && visibles.length === 0 && (
           <div className="card p-12 text-center">
             <p className="text-ink/50 text-sm mb-4">
-              {reservas.length === 0 ? 'Aún no has creado ninguna reserva.' : 'No hay reservas que coincidan con tu búsqueda.'}
+              {reservas.length === 0
+                ? 'Aún no hay check-ins. Comparte el QR de arriba en recepción para que los huéspedes empiecen.'
+                : 'No hay reservas que coincidan con tu búsqueda.'}
             </p>
-            {reservas.length === 0 && (
-              <Link to="/admin/reservas/nueva" className="btn-primary inline-flex text-sm">
-                Crear la primera reserva
-              </Link>
-            )}
           </div>
         )}
 

@@ -32,7 +32,8 @@ export default function Inicio() {
         </Link>
 
         <p className="text-ink/35 text-xs mt-6">
-          ¿Eres huésped? Usa el link o código QR que te compartió el hotel.
+          ¿Eres huésped? Escanea el QR en recepción o entra directo a{' '}
+          <Link to="/checkin" className="text-brass hover:underline">/checkin</Link>.
         </p>
       </div>
     </div>

@@ -49,23 +49,18 @@ npm run dev
 
 ## 3. Cómo se usa
 
-**Como administrador:**
-1. Entra a `/admin/login` e inicia sesión con el usuario que creaste en Supabase.
-2. Click en "+ Nueva reserva", llena los datos, y se genera un link único
-   (`tudominio.com/checkin/AB3XK9`) **junto con un código QR** descargable.
-3. Comparte el link por WhatsApp/email, o imprime el QR y pégalo en la puerta
-   de la habitación o en recepción para que el huésped lo escanee.
-4. Cuando el huésped complete el check-in, aparece en la tabla con estado `check-in`.
-   Click en la fila para ver sus datos y su documento de identidad.
-5. Al salir, marca "check-out" desde el detalle de la reserva.
+**Flujo principal — auto check-in (sin que recepción cree nada):**
+1. Entra a `/admin`, abre la tarjeta **"Enlace de auto check-in"** y descarga el QR
+2. Imprímelo **una sola vez** y pégalo en recepción — nunca cambia
+3. El huésped llega, recepción le dice de palabra su número de habitación, el huésped escanea el QR
+4. El huésped llena sus datos y los de sus acompañantes, sube su documento, acepta el consentimiento, y envía
+5. La reserva aparece automáticamente en el panel ya en estado `check-in` — nadie en recepción tuvo que crear nada
 
-**Como huésped:**
-1. Abre el link o escanea el QR que le compartió el hotel.
-2. Llena sus datos (y los de sus acompañantes si son varios).
-3. Sube una foto de su cédula o pasaporte.
-4. Acepta el tratamiento de datos personales (checkbox obligatorio).
-5. Envía. Recibe un comprobante en pantalla que puede imprimir. Ya no puede
-   volver a hacer check-in con el mismo link (evita duplicados).
+**Flujo alterno — reserva anticipada (opcional, para reservas hechas con antelación):**
+1. Desde `/admin`, botón **"+ Reserva anticipada"**
+2. Llena los datos, se genera un link/QR **de un solo uso** para ese huésped específico
+3. Compártelo con el huésped antes de que llegue
+4. Si el huésped nunca completa el check-in con ese link, puedes reenviárselo o eliminar la reserva desde su detalle
 
 ## 4. Publicarlo gratis (hosting)
 
@@ -85,9 +80,9 @@ Ambas opciones son gratis para este nivel de tráfico (un hotel pequeño/mediano
 
 - **RLS activado** en `reservas` y `huespedes`: sin sesión de admin, nadie puede
   hacer `SELECT` directo sobre esas tablas desde el navegador.
-- El huésped **solo** interactúa mediante dos funciones de Postgres
-  (`buscar_reserva_por_codigo`, `registrar_checkin`) que validan el código
-  de reserva y no exponen más datos de los necesarios.
+- El huésped **solo** interactúa mediante funciones de Postgres
+  (`buscar_reserva_por_codigo`, `registrar_checkin`, `autoregistrar_checkin`) que no
+  exponen más datos de los necesarios.
 - Los documentos de identidad se guardan en un **bucket privado** de Storage:
   el huésped puede subir, pero no puede leer ni listar archivos de otros.
   Solo el admin autenticado puede verlos (con URLs firmadas que expiran).
@@ -95,6 +90,13 @@ Ambas opciones son gratis para este nivel de tráfico (un hotel pequeño/mediano
   (se valida en la función SQL con bloqueo de fila `for update`, evitando
   condiciones de carrera si dos personas envían el formulario a la vez).
 - Las variables de entorno (`.env`) no se suben al repositorio (`.gitignore`).
+
+⚠️ **Trade-off del auto check-in que debes conocer:** como el link `/checkin` es
+fijo y público (no requiere código previo), cualquiera que lo encuentre puede
+enviar registros. Es el mismo riesgo que tiene cualquier formulario público de
+contacto. Si en algún momento ves registros falsos o spam, dos opciones simples:
+mantener el QR solo impreso en papel (no publicado en redes/web), o pedirme que
+agregue un PIN de acceso que el hotel cambie cada cierto tiempo.
 
 ## 6. Estructura del proyecto
 
@@ -107,6 +109,21 @@ src/pages/CheckIn.jsx      → página pública de check-in
 src/pages/AdminLogin.jsx   → login del panel
 src/pages/AdminDashboard.jsx → panel: lista, filtros, crear reserva, exportar CSV
 ```
+
+## 8. Actualizando un proyecto ya desplegado (migración)
+
+Si ya tienes Supabase configurado de una versión anterior, solo necesitas correr
+esto en el **SQL Editor** antes de subir el código nuevo — agrega las funciones
+del auto check-in sin tocar tus datos existentes:
+
+```sql
+-- Copia y pega desde "FUNCIÓN: generar_codigo_unico" hasta el final
+-- del archivo database/schema.sql actualizado, y dale Run.
+```
+
+Es seguro correr todo el `schema.sql` de nuevo aunque ya lo hayas ejecutado antes:
+usa `create or replace function` y `if not exists` en todos lados, así que no
+duplica ni borra nada.
 
 ## 7. Posibles mejoras futuras (no incluidas, para no sobrecargar el MVP)
 

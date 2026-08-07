@@ -181,6 +181,110 @@ $$;
 grant execute on function registrar_checkin(text, jsonb) to anon, authenticated;
 
 -- ----------------------------------------------------------------------------
+-- FUNCIÓN: generar_codigo_unico
+-- Genera un código corto de reserva garantizando que no choque con uno
+-- existente. Uso interno de autoregistrar_checkin.
+-- ----------------------------------------------------------------------------
+create or replace function generar_codigo_unico()
+returns text
+language plpgsql
+set search_path = public
+as $$
+declare
+  v_codigo text;
+  v_existe boolean;
+begin
+  loop
+    select string_agg(
+      substr('ABCDEFGHJKLMNPQRSTUVWXYZ23456789', (random() * 32)::int + 1, 1), ''
+    ) into v_codigo
+    from generate_series(1, 6);
+
+    select exists(select 1 from reservas where codigo = v_codigo) into v_existe;
+    exit when not v_existe;
+  end loop;
+  return v_codigo;
+end;
+$$;
+
+-- ----------------------------------------------------------------------------
+-- FUNCIÓN: autoregistrar_checkin
+-- El huésped la llama desde /checkin (sin código previo). Crea la reserva
+-- Y los huéspedes en un solo paso, sin que el hotel tenga que preparar
+-- nada de antemano. La reserva nace directamente en estado "check-in".
+-- ----------------------------------------------------------------------------
+create or replace function autoregistrar_checkin(p_reserva jsonb, p_huespedes jsonb)
+returns text
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_codigo text;
+  v_reserva_id uuid;
+  v_huesped jsonb;
+  v_titular jsonb;
+begin
+  if p_huespedes is null or jsonb_array_length(p_huespedes) < 1 then
+    raise exception 'Debe registrar al menos un huésped';
+  end if;
+
+  v_titular := p_huespedes->0;
+  if coalesce((v_titular->>'acepto_terminos')::boolean, false) is not true then
+    raise exception 'El titular debe aceptar el tratamiento de datos para completar el check-in';
+  end if;
+
+  if nullif(p_reserva->>'fecha_salida', '') is null then
+    raise exception 'La fecha de salida es obligatoria';
+  end if;
+
+  v_codigo := generar_codigo_unico();
+
+  insert into reservas (
+    codigo, nombre_titular, habitacion, fecha_entrada, fecha_salida,
+    num_personas, estado, checkin_at
+  ) values (
+    v_codigo,
+    trim(coalesce(v_titular->>'nombres', '') || ' ' || coalesce(v_titular->>'apellidos', '')),
+    nullif(p_reserva->>'habitacion', ''),
+    coalesce(nullif(p_reserva->>'fecha_entrada', '')::date, current_date),
+    (p_reserva->>'fecha_salida')::date,
+    jsonb_array_length(p_huespedes),
+    'check-in',
+    now()
+  )
+  returning id into v_reserva_id;
+
+  for v_huesped in select * from jsonb_array_elements(p_huespedes)
+  loop
+    insert into huespedes (
+      reserva_id, es_titular, nombres, apellidos, ci_pasaporte,
+      nacionalidad, email, telefono, direccion, ciudad,
+      documento_path, datos_facturacion, acepto_terminos
+    ) values (
+      v_reserva_id,
+      coalesce((v_huesped->>'es_titular')::boolean, false),
+      v_huesped->>'nombres',
+      v_huesped->>'apellidos',
+      v_huesped->>'ci_pasaporte',
+      v_huesped->>'nacionalidad',
+      nullif(v_huesped->>'email', ''),
+      nullif(v_huesped->>'telefono', ''),
+      nullif(v_huesped->>'direccion', ''),
+      nullif(v_huesped->>'ciudad', ''),
+      nullif(v_huesped->>'documento_path', ''),
+      v_huesped->'datos_facturacion',
+      coalesce((v_huesped->>'acepto_terminos')::boolean, false)
+    );
+  end loop;
+
+  return v_codigo;
+end;
+$$;
+
+grant execute on function autoregistrar_checkin(jsonb, jsonb) to anon, authenticated;
+
+-- ----------------------------------------------------------------------------
 -- STORAGE: bucket privado para fotos de cédula/pasaporte
 -- ----------------------------------------------------------------------------
 insert into storage.buckets (id, name, public)

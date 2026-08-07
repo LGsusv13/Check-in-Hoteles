@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
 import Inicio from './pages/Inicio.jsx'
+import AutoCheckIn from './pages/AutoCheckIn.jsx'
 import CheckIn from './pages/CheckIn.jsx'
 import AdminLogin from './pages/AdminLogin.jsx'
 import AdminDashboard from './pages/AdminDashboard.jsx'
@@ -13,6 +14,7 @@ export default function App() {
     <>
       <Routes>
         <Route path="/" element={<Inicio />} />
+        <Route path="/checkin" element={<AutoCheckIn />} />
         <Route path="/checkin/:codigo" element={<CheckIn />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
