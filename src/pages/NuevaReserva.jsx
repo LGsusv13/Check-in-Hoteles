@@ -113,7 +113,7 @@ export default function NuevaReserva() {
     <div className="min-h-screen font-body">
       <header className="border-b border-ink/10 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-xl mx-auto px-6 py-3 flex items-center gap-3">
-          <img src="/logo-hotel-oscuro.png" alt="Casa San Rafael" className="h-8 w-auto" />
+          <img src="/logo-hotel-oscuro.png" alt="Hotel San Miguel" className="h-8 w-auto" />
           <Link to="/admin" className="text-ink/50 text-sm hover:text-ink transition-colors">← Volver al panel</Link>
         </div>
       </header>

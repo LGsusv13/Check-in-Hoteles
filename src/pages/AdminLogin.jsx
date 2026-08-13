@@ -25,7 +25,7 @@ export default function AdminLogin() {
   return (
     <div className="min-h-screen flex items-center justify-center px-6 font-body">
       <form onSubmit={entrar} className="w-full max-w-sm bg-paper rounded-2xl p-8 shadow-2xl">
-        <img src="/logo-hotel-oscuro.png" alt="Casa San Rafael" className="h-16 w-auto mx-auto mb-5" />
+        <img src="/logo-hotel-oscuro.png" alt="Hotel San Miguel" className="h-16 w-auto mx-auto mb-5" />
 
         <p className="eyebrow mb-1 text-center">Panel administrativo</p>
         <h1 className="font-display text-2xl text-ink font-semibold mb-6 text-center">Iniciar sesión</h1>

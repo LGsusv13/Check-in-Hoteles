@@ -22,53 +22,36 @@ export default function AutoCheckIn() {
   const [sessionId] = useState(() => crypto.randomUUID())
   const [habitacion, setHabitacion] = useState('')
   const [fechaSalida, setFechaSalida] = useState('')
-  const [huespedes, setHuespedes] = useState([vacio()])
-  const [validez, setValidez] = useState({})
-  const [subiendoCid, setSubiendoCid] = useState(null)
+  const [numPersonas, setNumPersonas] = useState(1)
+  const [titular, setTitular] = useState(vacio())
+  const [titularValido, setTitularValido] = useState(false)
+  const [subiendo, setSubiendo] = useState(false)
   const [aceptaTerminos, setAceptaTerminos] = useState(false)
   const [enviando, setEnviando] = useState(false)
   const [errorEnvio, setErrorEnvio] = useState('')
   const [resultado, setResultado] = useState(null) // { codigo }
 
-  const actualizarHuesped = (cid, next) => {
-    setHuespedes((prev) => prev.map((h) => (h._cid === cid ? { ...next, _cid: cid } : h)))
-  }
+  const actualizarTitular = (_cid, next) => setTitular(next)
+  const actualizarValidez = (_cid, ok) => setTitularValido(ok)
 
-  const actualizarValidez = (cid, ok) => {
-    setValidez((prev) => ({ ...prev, [cid]: ok }))
-  }
-
-  const subirDocumento = async (cid, file) => {
-    setSubiendoCid(cid)
+  const subirDocumento = async (_cid, file) => {
+    setSubiendo(true)
     try {
       const ext = file.name.split('.').pop()
       const ruta = `auto/${sessionId}/${crypto.randomUUID()}.${ext}`
       const { error } = await supabase.storage.from('documentos-identidad').upload(ruta, file)
       if (error) throw error
-      const actual = huespedes.find((h) => h._cid === cid)
-      actualizarHuesped(cid, { ...actual, documento_path: ruta })
+      setTitular((prev) => ({ ...prev, documento_path: ruta }))
     } catch (err) {
       alert('No se pudo subir el documento. Intenta de nuevo.')
       console.error(err)
     } finally {
-      setSubiendoCid(null)
+      setSubiendo(false)
     }
   }
 
-  const agregarAcompanante = () => setHuespedes((prev) => [...prev, vacio()])
-  const quitarAcompanante = (cid) => {
-    setHuespedes((prev) => prev.filter((h) => h._cid !== cid))
-    setValidez((prev) => {
-      const next = { ...prev }
-      delete next[cid]
-      return next
-    })
-  }
-
-  const titular = huespedes[0]
-  const titularCompleto = validez[titular?._cid] && !!titular?.telefono && !!titular?.documento_path
-  const acompanantesCompletos = huespedes.slice(1).every((h) => validez[h._cid])
-  const puedeEnviar = titularCompleto && acompanantesCompletos && !!fechaSalida && aceptaTerminos && !enviando
+  const puedeEnviar =
+    titularValido && !!titular.telefono && !!fechaSalida && numPersonas >= 1 && aceptaTerminos && !enviando
 
   const fechaSalidaInvalida = useMemo(() => {
     if (!fechaSalida) return false
@@ -79,13 +62,15 @@ export default function AutoCheckIn() {
     setEnviando(true)
     setErrorEnvio('')
     try {
-      const payload = huespedes.map((h, i) => {
-        const { _cid, ...resto } = h
-        void _cid
-        return { ...resto, es_titular: i === 0, acepto_terminos: i === 0 ? aceptaTerminos : true }
-      })
+      const { _cid, ...datosTitular } = titular
+      void _cid
+      const payload = [{ ...datosTitular, es_titular: true, acepto_terminos: aceptaTerminos }]
       const { data, error } = await supabase.rpc('autoregistrar_checkin', {
-        p_reserva: { habitacion: habitacion || null, fecha_salida: fechaSalida },
+        p_reserva: {
+          habitacion: habitacion || null,
+          fecha_salida: fechaSalida,
+          num_personas: numPersonas,
+        },
         p_huespedes: payload,
       })
       if (error) throw error
@@ -106,16 +91,16 @@ export default function AutoCheckIn() {
           <SelloConfirmacion />
           <h1 className="font-display text-2xl text-paper font-semibold mb-2 mt-5">Check-in completado</h1>
           <p className="text-paper/60 text-sm mb-6">
-            Gracias, {huespedes[0].nombres}. Tus datos fueron registrados. Puedes acercarte a recepción para recibir tu llave.
+            Gracias, {titular.nombres}. Tus datos fueron registrados. Puedes acercarte a recepción para recibir tu llave.
           </p>
 
           <div className="card p-5 text-left text-sm mb-6 print:border-ink/30">
             <p className="text-[11px] uppercase tracking-wider text-ink/40 font-semibold mb-2">Comprobante</p>
             <div className="space-y-1 text-ink/70">
-              <p><span className="text-ink/40">Titular:</span> {huespedes[0].nombres} {huespedes[0].apellidos}</p>
+              <p><span className="text-ink/40">Titular:</span> {titular.nombres} {titular.apellidos}</p>
               {habitacion && <p><span className="text-ink/40">Habitación:</span> {habitacion}</p>}
               <p><span className="text-ink/40">Código de reserva:</span> {resultado.codigo}</p>
-              <p><span className="text-ink/40">Huéspedes:</span> {huespedes.length}</p>
+              <p><span className="text-ink/40">Número de personas:</span> {numPersonas}</p>
               <p><span className="text-ink/40">Fecha de registro:</span> {fecha.toLocaleString('es-EC')}</p>
             </div>
           </div>
@@ -133,11 +118,11 @@ export default function AutoCheckIn() {
     <div className="min-h-screen py-8 px-4 font-body">
       <div className="max-w-2xl mx-auto">
         <header className="mb-8 text-center">
-          <img src="/logo-hotel.png" alt="Casa San Rafael" className="h-16 mx-auto mb-4" />
+          <img src="/logo-hotel.png" alt="Hotel San Miguel" className="h-16 mx-auto mb-4" />
           <p className="eyebrow mb-2">Check-in digital</p>
           <h1 className="font-display text-3xl md:text-4xl text-paper font-semibold">Bienvenido</h1>
           <p className="text-paper/55 text-sm mt-3 max-w-sm mx-auto">
-            Completa tus datos y los de tus acompañantes. Recepción ya te indicó tu número de habitación.
+            Completa tus datos. Recepción ya te indicó tu número de habitación.
           </p>
         </header>
 
@@ -148,49 +133,43 @@ export default function AutoCheckIn() {
               <input className="field-input" value={habitacion} onChange={(e) => setHabitacion(e.target.value)} placeholder="204" />
             </div>
             <div>
-              <label className="field-label">Fecha de salida *</label>
+              <label className="field-label">Número de personas *</label>
               <input
-                type="date"
-                min={hoy()}
+                type="number"
+                min="1"
                 required
                 className="field-input"
-                value={fechaSalida}
-                onChange={(e) => setFechaSalida(e.target.value)}
+                value={numPersonas}
+                onChange={(e) => setNumPersonas(Math.max(1, Number(e.target.value) || 1))}
               />
-              {fechaSalidaInvalida && <p className="text-rust text-xs mt-1">La fecha de salida no puede ser en el pasado</p>}
             </div>
+          </div>
+          <div className="mt-4">
+            <label className="field-label">Fecha de salida *</label>
+            <input
+              type="date"
+              min={hoy()}
+              required
+              className="field-input"
+              value={fechaSalida}
+              onChange={(e) => setFechaSalida(e.target.value)}
+            />
+            {fechaSalidaInvalida && <p className="text-rust text-xs mt-1">La fecha de salida no puede ser en el pasado</p>}
           </div>
         </div>
 
-        <div className="card overflow-hidden divide-y divide-ink/10">
-          {huespedes.map((h, i) => (
-            <div key={h._cid} className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-display text-lg text-ink">
-                  {i === 0 ? 'Huésped titular' : `Acompañante ${i}`}
-                </h2>
-                {i > 0 && (
-                  <button onClick={() => quitarAcompanante(h._cid)} className="text-xs text-rust/70 hover:text-rust font-semibold">
-                    Quitar
-                  </button>
-                )}
-              </div>
-              <GuestFields
-                guest={h}
-                index={h._cid}
-                esTitular={i === 0}
-                onChange={actualizarHuesped}
-                onValidityChange={actualizarValidez}
-                uploading={subiendoCid === h._cid}
-                onUpload={subirDocumento}
-              />
-            </div>
-          ))}
+        <div className="card p-6">
+          <h2 className="font-display text-lg text-ink mb-4">Huésped titular</h2>
+          <GuestFields
+            guest={titular}
+            index="titular"
+            esTitular
+            onChange={actualizarTitular}
+            onValidityChange={actualizarValidez}
+            uploading={subiendo}
+            onUpload={subirDocumento}
+          />
         </div>
-
-        <button onClick={agregarAcompanante} className="btn-outline w-full mt-4 text-sm">
-          + Agregar acompañante
-        </button>
 
         <label className="flex items-start gap-3 mt-6 card p-4 cursor-pointer select-none">
           <input
@@ -200,9 +179,9 @@ export default function AutoCheckIn() {
             className="mt-0.5 accent-brass w-4 h-4 shrink-0"
           />
           <span className="text-xs text-ink/60 leading-relaxed">
-            Autorizo al hotel a tratar mis datos personales y los de mis acompañantes
-            (incluyendo la foto del documento de identidad) únicamente con fines de
-            registro de huéspedes y cumplimiento de normativa de alojamiento turístico.
+            Autorizo al hotel a tratar mis datos personales (incluyendo la foto del documento de
+            identidad, si la adjunto) únicamente con fines de registro de huéspedes y cumplimiento
+            de normativa de alojamiento turístico.
           </span>
         </label>
 
@@ -215,7 +194,7 @@ export default function AutoCheckIn() {
         </button>
         {!puedeEnviar && !enviando && (
           <p className="text-center text-xs text-paper/40 mt-3">
-            Completa los datos y foto del titular, la fecha de salida, y acepta el tratamiento de datos para continuar.
+            Completa tu nombre, teléfono, número de personas, fecha de salida, y acepta el tratamiento de datos para continuar.
           </p>
         )}
       </div>

@@ -1,11 +1,5 @@
 import { useState } from 'react'
-import {
-  validarNombre,
-  validarDocumentoIdentidad,
-  validarEmail,
-  validarTelefono,
-  MENSAJES_ERROR,
-} from '../lib/validators.js'
+import { validarNombre, validarEmail, validarTelefono, MENSAJES_ERROR } from '../lib/validators.js'
 
 const INPUT = 'field-input'
 const LABEL = 'field-label'
@@ -35,18 +29,16 @@ export default function GuestFields({ guest, index, onChange, onValidityChange, 
     let err = ''
     if (field === 'nombres' && !validarNombre(value)) err = MENSAJES_ERROR.nombres
     if (field === 'apellidos' && !validarNombre(value)) err = MENSAJES_ERROR.apellidos
-    if (field === 'ci_pasaporte' && !validarDocumentoIdentidad(value, esExtranjero)) {
-      err = esExtranjero ? MENSAJES_ERROR.ci_pasaporte_generico : MENSAJES_ERROR.ci_pasaporte_cedula
-    }
     if (field === 'email' && !validarEmail(value)) err = MENSAJES_ERROR.email
     if (field === 'telefono' && value && !validarTelefono(value)) err = MENSAJES_ERROR.telefono
 
     const nextErrors = { ...errors, [field]: err }
     setErrors(nextErrors)
-    const requiredFields = ['nombres', 'apellidos', 'ci_pasaporte']
+    // Solo nombres y apellidos son obligatorios para continuar — el documento
+    // y su formato no condicionan el envío.
+    const requiredFields = ['nombres', 'apellidos']
     const allOk = requiredFields.every((f) => {
       const val = f === field ? value : guest[f]
-      if (f === 'ci_pasaporte') return validarDocumentoIdentidad(val || '', esExtranjero)
       return validarNombre(val || '')
     })
     onValidityChange(index, allOk)
@@ -88,9 +80,7 @@ export default function GuestFields({ guest, index, onChange, onValidityChange, 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <span className={LABEL + ' mb-0'}>
-              Documento <span className="text-rust">*</span>
-            </span>
+            <span className={LABEL + ' mb-0'}>Documento (opcional)</span>
             <label className="flex items-center gap-1.5 text-xs text-ink/60 cursor-pointer select-none">
               <input
                 type="checkbox"
@@ -105,10 +95,8 @@ export default function GuestFields({ guest, index, onChange, onValidityChange, 
             className={INPUT}
             value={guest.ci_pasaporte}
             onChange={(e) => set('ci_pasaporte', e.target.value)}
-            onBlur={(e) => validar('ci_pasaporte', e.target.value)}
-            placeholder={esExtranjero ? 'Número de pasaporte' : '10 dígitos'}
+            placeholder={esExtranjero ? 'Número de pasaporte' : 'Cédula (opcional)'}
           />
-          {errors.ci_pasaporte && <p className="text-rust text-xs mt-1">{errors.ci_pasaporte}</p>}
         </div>
         <Campo label="Nacionalidad" required>
           <input
@@ -165,9 +153,7 @@ export default function GuestFields({ guest, index, onChange, onValidityChange, 
       )}
 
       <div>
-        <span className={LABEL}>
-          Foto de documento (cédula / pasaporte) {esTitular && <span className="text-rust">*</span>}
-        </span>
+        <span className={LABEL}>Foto de documento (opcional)</span>
         <label className="flex items-center justify-center gap-2 border-2 border-dashed border-ink/20 rounded-lg py-3.5 cursor-pointer hover:border-brass/60 hover:bg-brass/5 transition-colors text-sm text-ink/60">
           {uploading ? (
             <span>Subiendo…</span>

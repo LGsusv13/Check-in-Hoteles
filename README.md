@@ -53,8 +53,13 @@ npm run dev
 1. Entra a `/admin`, abre la tarjeta **"Enlace de auto check-in"** y descarga el QR
 2. Imprímelo **una sola vez** y pégalo en recepción — nunca cambia
 3. El huésped llega, recepción le dice de palabra su número de habitación, el huésped escanea el QR
-4. El huésped llena sus datos y los de sus acompañantes, sube su documento, acepta el consentimiento, y envía
+4. El huésped llena **solo sus propios datos** (nombre, teléfono; documento y foto son opcionales)
+   y cuántas personas son en total, acepta el consentimiento, y envía
 5. La reserva aparece automáticamente en el panel ya en estado `check-in` — nadie en recepción tuvo que crear nada
+
+> Nota: en este flujo solo se registra el detalle del huésped titular. El número de
+> acompañantes queda guardado como un conteo (`número de personas`), no con los datos
+> individuales de cada uno — así el check-in es más rápido para el huésped.
 
 **Flujo alterno — reserva anticipada (opcional, para reservas hechas con antelación):**
 1. Desde `/admin`, botón **"+ Reserva anticipada"**

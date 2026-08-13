@@ -73,7 +73,7 @@ export default function AdminDashboard() {
       <header className="border-b border-ink/10 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src="/logo-hotel-oscuro.png" alt="Casa San Rafael" className="h-9 w-auto" />
+            <img src="/logo-hotel-oscuro.png" alt="Hotel San Miguel" className="h-9 w-auto" />
             <div>
               <p className="eyebrow">Panel administrativo</p>
               <h1 className="font-display text-xl text-ink font-semibold">Reservas y check-ins</h1>

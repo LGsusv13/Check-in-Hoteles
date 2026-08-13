@@ -73,8 +73,7 @@ export default function CheckIn() {
     }
   }
 
-  const titularCompleto =
-    validez[0] && !!huespedes[0]?.telefono && !!huespedes[0]?.documento_path
+  const titularCompleto = validez[0] && !!huespedes[0]?.telefono
   const acompanantesCompletos = huespedes.slice(1).every((_, i) => validez[i + 1])
   const puedeEnviar = titularCompleto && acompanantesCompletos && aceptaTerminos && !enviando
 
@@ -159,7 +158,7 @@ export default function CheckIn() {
     <div className="min-h-screen py-8 px-4 font-body">
       <div className="max-w-2xl mx-auto">
         <header className="mb-8 text-center">
-          <img src="/logo-hotel.png" alt="Casa San Rafael" className="h-16 mx-auto mb-4" />
+          <img src="/logo-hotel.png" alt="Hotel San Miguel" className="h-16 mx-auto mb-4" />
           <p className="eyebrow mb-2">Check-in digital</p>
           <h1 className="font-display text-3xl md:text-4xl text-paper font-semibold">{reserva.nombre_titular}</h1>
           <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
@@ -225,7 +224,7 @@ export default function CheckIn() {
         </button>
         {!puedeEnviar && !enviando && (
           <p className="text-center text-xs text-paper/40 mt-3">
-            Completa los datos y foto del titular, y acepta el tratamiento de datos para continuar.
+            Completa el nombre y teléfono del titular, y acepta el tratamiento de datos para continuar.
           </p>
         )}
       </div>

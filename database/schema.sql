@@ -249,7 +249,7 @@ begin
     nullif(p_reserva->>'habitacion', ''),
     coalesce(nullif(p_reserva->>'fecha_entrada', '')::date, current_date),
     (p_reserva->>'fecha_salida')::date,
-    jsonb_array_length(p_huespedes),
+    coalesce(nullif(p_reserva->>'num_personas', '')::int, jsonb_array_length(p_huespedes)),
     'check-in',
     now()
   )

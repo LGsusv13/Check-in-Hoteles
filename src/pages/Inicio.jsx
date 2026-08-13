@@ -4,7 +4,7 @@ export default function Inicio() {
   return (
     <div className="min-h-screen flex items-center justify-center px-6 py-16">
       <div className="max-w-md w-full text-center">
-        <img src="/logo-hotel.png" alt="Casa San Rafael" className="w-44 mx-auto mb-6 drop-shadow-lg" />
+        <img src="/logo-hotel.png" alt="Hotel San Miguel" className="w-44 mx-auto mb-6 drop-shadow-lg" />
 
         <p className="eyebrow mb-3">Sistema de check-in</p>
         <h1 className="font-display text-4xl text-paper font-semibold mb-4 leading-tight">
