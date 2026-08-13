@@ -224,7 +224,7 @@ export default function CheckIn() {
           {enviando ? 'Guardando…' : 'Completar check-in'}
         </button>
         {!puedeEnviar && !enviando && (
-          <p className="text-center text-xs text-ink/40 mt-3">
+          <p className="text-center text-xs text-paper/40 mt-3">
             Completa los datos y foto del titular, y acepta el tratamiento de datos para continuar.
           </p>
         )}

@@ -124,8 +124,8 @@ export default function DetalleReserva() {
         <div className="flex items-start justify-between mb-1 gap-4">
           <div>
             <p className="eyebrow mb-1">Reserva · {reserva.codigo}</p>
-            <h1 className="font-display text-2xl text-ink font-semibold">{reserva.nombre_titular}</h1>
-            <p className="text-ink/50 text-sm mt-1">
+            <h1 className="font-display text-2xl text-paper font-semibold">{reserva.nombre_titular}</h1>
+            <p className="text-paper/60 text-sm mt-1">
               {reserva.habitacion && <>Hab. {reserva.habitacion} · </>}
               {reserva.fecha_entrada} → {reserva.fecha_salida}
             </p>

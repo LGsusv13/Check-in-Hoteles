@@ -120,7 +120,7 @@ export default function NuevaReserva() {
 
       <main className="max-w-xl mx-auto px-6 py-10">
         <p className="eyebrow mb-2">Nueva reserva</p>
-        <h1 className="font-display text-2xl text-ink font-semibold mb-6">Datos del huésped</h1>
+        <h1 className="font-display text-2xl text-paper font-semibold mb-6">Datos del huésped</h1>
 
         <form onSubmit={crear} className="card p-6 space-y-4">
           <div>
