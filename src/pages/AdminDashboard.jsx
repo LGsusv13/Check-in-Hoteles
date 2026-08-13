@@ -69,12 +69,15 @@ export default function AdminDashboard() {
   }, [reservas])
 
   return (
-    <div className="min-h-screen bg-paper font-body">
-      <header className="border-b border-ink/10 bg-white/70 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div>
-            <p className="eyebrow">Panel administrativo</p>
-            <h1 className="font-display text-xl text-ink font-semibold">Reservas y check-ins</h1>
+    <div className="min-h-screen font-body">
+      <header className="border-b border-ink/10 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img src="/logo-hotel-oscuro.png" alt="Casa San Rafael" className="h-9 w-auto" />
+            <div>
+              <p className="eyebrow">Panel administrativo</p>
+              <h1 className="font-display text-xl text-ink font-semibold">Reservas y check-ins</h1>
+            </div>
           </div>
           <button onClick={cerrarSesion} className="btn-ghost text-xs px-3 py-2">
             Cerrar sesión

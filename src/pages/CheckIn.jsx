@@ -102,13 +102,13 @@ export default function CheckIn() {
 
   // ---------- estados de carga / error ----------
   if (estadoCarga === 'cargando') {
-    return <Envoltorio><p className="text-ink/50 text-sm">Buscando tu reserva…</p></Envoltorio>
+    return <Envoltorio><p className="text-paper/60 text-sm">Buscando tu reserva…</p></Envoltorio>
   }
   if (estadoCarga === 'no-encontrado') {
     return (
       <Envoltorio>
-        <h1 className="font-display text-2xl text-ink mb-2">Código no encontrado</h1>
-        <p className="text-ink/60 text-sm">
+        <h1 className="font-display text-2xl text-paper mb-2">Código no encontrado</h1>
+        <p className="text-paper/60 text-sm">
           El enlace de check-in no es válido. Verifica el link que te compartió el hotel o contacta a recepción.
         </p>
       </Envoltorio>
@@ -117,8 +117,8 @@ export default function CheckIn() {
   if (estadoCarga === 'ya-hecho') {
     return (
       <Envoltorio>
-        <h1 className="font-display text-2xl text-ink mb-2">Check-in ya registrado</h1>
-        <p className="text-ink/60 text-sm">
+        <h1 className="font-display text-2xl text-paper mb-2">Check-in ya registrado</h1>
+        <p className="text-paper/60 text-sm">
           La reserva de <strong>{reserva?.nombre_titular}</strong> ya tiene un check-in completado. Si crees que esto es un error, contacta a recepción.
         </p>
       </Envoltorio>
@@ -127,15 +127,15 @@ export default function CheckIn() {
   if (enviado) {
     const fecha = new Date()
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center px-6 font-body print:bg-white">
+      <div className="min-h-screen flex items-center justify-center px-6 font-body print:bg-white">
         <div className="max-w-sm w-full text-center">
           <SelloConfirmacion />
-          <h1 className="font-display text-2xl text-ink mb-2 mt-5">Check-in completado</h1>
-          <p className="text-ink/60 text-sm mb-6">
+          <h1 className="font-display text-2xl text-paper mb-2 mt-5">Check-in completado</h1>
+          <p className="text-paper/60 text-sm mb-6">
             Gracias, {huespedes[0].nombres}. Tus datos fueron registrados. Puedes acercarte a recepción para recibir tu llave.
           </p>
 
-          <div className="bg-white border border-ink/10 rounded-xl p-5 text-left text-sm mb-6 print:border-ink/30">
+          <div className="card p-5 text-left text-sm mb-6 print:border-ink/30">
             <p className="text-[11px] uppercase tracking-wider text-ink/40 font-semibold mb-2">Comprobante</p>
             <div className="space-y-1 text-ink/70">
               <p><span className="text-ink/40">Titular:</span> {huespedes[0].nombres} {huespedes[0].apellidos}</p>
@@ -146,10 +146,7 @@ export default function CheckIn() {
             </div>
           </div>
 
-          <button
-            onClick={() => window.print()}
-            className="w-full py-3 rounded-xl border border-ink/15 text-ink/70 font-semibold text-sm uppercase tracking-widest hover:bg-white transition-colors print:hidden"
-          >
+          <button onClick={() => window.print()} className="btn-outline w-full uppercase tracking-widest print:hidden">
             Imprimir comprobante
           </button>
         </div>
@@ -159,11 +156,12 @@ export default function CheckIn() {
 
   // ---------- formulario ----------
   return (
-    <div className="min-h-screen bg-paper py-8 px-4 font-body">
+    <div className="min-h-screen py-8 px-4 font-body">
       <div className="max-w-2xl mx-auto">
         <header className="mb-8 text-center">
+          <img src="/logo-hotel.png" alt="Casa San Rafael" className="h-16 mx-auto mb-4" />
           <p className="eyebrow mb-2">Check-in digital</p>
-          <h1 className="font-display text-3xl md:text-4xl text-ink font-semibold">{reserva.nombre_titular}</h1>
+          <h1 className="font-display text-3xl md:text-4xl text-paper font-semibold">{reserva.nombre_titular}</h1>
           <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
             {reserva.habitacion && (
               <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-ink/10 text-ink/60">
@@ -200,7 +198,7 @@ export default function CheckIn() {
           ))}
         </div>
 
-        <label className="flex items-start gap-3 mt-6 bg-white rounded-xl border border-ink/10 p-4 cursor-pointer select-none">
+        <label className="flex items-start gap-3 mt-6 card p-4 cursor-pointer select-none">
           <input
             type="checkbox"
             checked={aceptaTerminos}
@@ -237,7 +235,7 @@ export default function CheckIn() {
 
 function Envoltorio({ children }) {
   return (
-    <div className="min-h-screen bg-paper flex items-center justify-center px-6 font-body">
+    <div className="min-h-screen flex items-center justify-center px-6 font-body">
       <div className="max-w-sm text-center">{children}</div>
     </div>
   )

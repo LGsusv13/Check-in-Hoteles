@@ -101,11 +101,11 @@ export default function AutoCheckIn() {
   if (resultado) {
     const fecha = new Date()
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center px-6 font-body print:bg-white">
+      <div className="min-h-screen flex items-center justify-center px-6 font-body print:bg-white">
         <div className="max-w-sm w-full text-center">
           <SelloConfirmacion />
-          <h1 className="font-display text-2xl text-ink font-semibold mb-2 mt-5">Check-in completado</h1>
-          <p className="text-ink/60 text-sm mb-6">
+          <h1 className="font-display text-2xl text-paper font-semibold mb-2 mt-5">Check-in completado</h1>
+          <p className="text-paper/60 text-sm mb-6">
             Gracias, {huespedes[0].nombres}. Tus datos fueron registrados. Puedes acercarte a recepción para recibir tu llave.
           </p>
 
@@ -130,12 +130,13 @@ export default function AutoCheckIn() {
 
   // ---------- formulario ----------
   return (
-    <div className="min-h-screen bg-paper py-8 px-4 font-body">
+    <div className="min-h-screen py-8 px-4 font-body">
       <div className="max-w-2xl mx-auto">
         <header className="mb-8 text-center">
+          <img src="/logo-hotel.png" alt="Casa San Rafael" className="h-16 mx-auto mb-4" />
           <p className="eyebrow mb-2">Check-in digital</p>
-          <h1 className="font-display text-3xl md:text-4xl text-ink font-semibold">Bienvenido</h1>
-          <p className="text-ink/50 text-sm mt-3 max-w-sm mx-auto">
+          <h1 className="font-display text-3xl md:text-4xl text-paper font-semibold">Bienvenido</h1>
+          <p className="text-paper/55 text-sm mt-3 max-w-sm mx-auto">
             Completa tus datos y los de tus acompañantes. Recepción ya te indicó tu número de habitación.
           </p>
         </header>

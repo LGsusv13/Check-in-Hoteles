@@ -79,11 +79,11 @@ export default function NuevaReserva() {
   // ---------- pantalla de éxito ----------
   if (codigoGenerado) {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center px-6 font-body">
+      <div className="min-h-screen flex items-center justify-center px-6 font-body">
         <div className="max-w-sm w-full text-center">
           <div className="w-14 h-14 rounded-full bg-moss/10 text-moss flex items-center justify-center text-2xl mx-auto mb-5">✓</div>
-          <h1 className="font-display text-2xl text-ink font-semibold mb-2">Reserva creada</h1>
-          <p className="text-ink/55 text-sm mb-6">Comparte este link o el código QR con el huésped:</p>
+          <h1 className="font-display text-2xl text-paper font-semibold mb-2">Reserva creada</h1>
+          <p className="text-paper/60 text-sm mb-6">Comparte este link o el código QR con el huésped:</p>
 
           {qrDataUrl && (
             <img src={qrDataUrl} alt={`Código QR para check-in ${codigoGenerado}`} className="w-40 h-40 mx-auto mb-5 rounded-xl border border-ink/10 shadow-sm" />
@@ -110,9 +110,10 @@ export default function NuevaReserva() {
 
   // ---------- formulario ----------
   return (
-    <div className="min-h-screen bg-paper font-body">
-      <header className="border-b border-ink/10 bg-white/70 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-xl mx-auto px-6 py-4">
+    <div className="min-h-screen font-body">
+      <header className="border-b border-ink/10 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
+        <div className="max-w-xl mx-auto px-6 py-3 flex items-center gap-3">
+          <img src="/logo-hotel-oscuro.png" alt="Casa San Rafael" className="h-8 w-auto" />
           <Link to="/admin" className="text-ink/50 text-sm hover:text-ink transition-colors">← Volver al panel</Link>
         </div>
       </header>

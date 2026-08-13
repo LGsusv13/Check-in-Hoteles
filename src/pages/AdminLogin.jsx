@@ -23,18 +23,12 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen bg-ink flex items-center justify-center px-6 font-body relative overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="absolute -right-28 -bottom-28 w-[360px] h-[360px] rounded-full border-[20px] border-white/[0.04] pointer-events-none"
-      />
-      <form onSubmit={entrar} className="w-full max-w-sm bg-paper rounded-2xl p-8 shadow-2xl relative">
-        <div className="w-10 h-10 rounded-full border-2 border-brass/50 flex items-center justify-center mb-5">
-          <div className="w-4 h-4 rounded-full bg-brass" />
-        </div>
+    <div className="min-h-screen flex items-center justify-center px-6 font-body">
+      <form onSubmit={entrar} className="w-full max-w-sm bg-paper rounded-2xl p-8 shadow-2xl">
+        <img src="/logo-hotel-oscuro.png" alt="Casa San Rafael" className="h-16 w-auto mx-auto mb-5" />
 
-        <p className="eyebrow mb-1">Panel administrativo</p>
-        <h1 className="font-display text-2xl text-ink font-semibold mb-6">Iniciar sesión</h1>
+        <p className="eyebrow mb-1 text-center">Panel administrativo</p>
+        <h1 className="font-display text-2xl text-ink font-semibold mb-6 text-center">Iniciar sesión</h1>
 
         <label className="field-label">Correo</label>
         <input

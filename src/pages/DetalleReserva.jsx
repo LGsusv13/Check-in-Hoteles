@@ -89,13 +89,13 @@ export default function DetalleReserva() {
   }
 
   if (cargando) {
-    return <Envoltorio><p className="text-ink/40 text-sm">Cargando reserva…</p></Envoltorio>
+    return <Envoltorio><p className="text-paper/60 text-sm">Cargando reserva…</p></Envoltorio>
   }
 
   if (noEncontrada) {
     return (
       <Envoltorio>
-        <h1 className="font-display text-xl text-ink mb-3">Reserva no encontrada</h1>
+        <h1 className="font-display text-xl text-paper mb-3">Reserva no encontrada</h1>
         <Link to="/admin" className="text-brass text-sm font-semibold hover:underline">← Volver al panel</Link>
       </Envoltorio>
     )
@@ -112,9 +112,10 @@ export default function DetalleReserva() {
   }
 
   return (
-    <div className="min-h-screen bg-paper font-body">
-      <header className="border-b border-ink/10 bg-white/70 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-6 py-4">
+    <div className="min-h-screen font-body">
+      <header className="border-b border-ink/10 bg-white/80 backdrop-blur-sm sticky top-0 z-10">
+        <div className="max-w-3xl mx-auto px-6 py-3 flex items-center gap-3">
+          <img src="/logo-hotel-oscuro.png" alt="Casa San Rafael" className="h-8 w-auto" />
           <Link to="/admin" className="text-ink/50 text-sm hover:text-ink transition-colors">← Volver al panel</Link>
         </div>
       </header>
@@ -217,7 +218,7 @@ export default function DetalleReserva() {
 
 function Envoltorio({ children }) {
   return (
-    <div className="min-h-screen bg-paper flex items-center justify-center px-6 font-body text-center">
+    <div className="min-h-screen flex items-center justify-center px-6 font-body text-center">
       <div>{children}</div>
     </div>
   )

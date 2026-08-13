@@ -17,8 +17,8 @@ export default function RequireAuth({ children }) {
 
   if (estado === 'verificando') {
     return (
-      <div className="min-h-screen bg-paper flex items-center justify-center">
-        <p className="text-ink/40 text-sm font-body">Verificando sesión…</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-paper/50 text-sm font-body">Verificando sesión…</p>
       </div>
     )
   }
